@@ -103,7 +103,7 @@ function DesktopIsland({ isOpen }) {
 function DesktopDock({ onOpenAssistant, isOpen, shouldNudge }) {
   return (
     <nav className="dock" aria-label="Dock">
-      <a className="dock__app dock__app--mail" href="mailto:iyushkumaryadav2027@gmail.com" aria-label="Mail">
+      <a className="dock__app dock__app--mail" href="mailto:piyushkumaryadav2027@gmail.com" aria-label="Mail">
         <img src={gmailLogo} alt="" />
       </a>
       <a className="dock__app dock__app--github" href="https://github.com/piyushxx07" target="_blank" rel="noreferrer" aria-label="GitHub">

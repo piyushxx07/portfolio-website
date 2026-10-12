@@ -1,4 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
+import githubLogo from './assets/github.png';
+import gmailLogo from './assets/gmail.png';
+import linkedinLogo from './assets/linkedin.png';
 import './styles.scss';
 
 const applePath =
@@ -89,24 +92,29 @@ function AppleMark() {
   );
 }
 
+function DesktopIsland({ isOpen }) {
+  return (
+    <div className={`desktop-island${isOpen ? ' is-open' : ''}`} aria-hidden="true">
+      <span className="desktop-island__glow" />
+    </div>
+  );
+}
+
 function DesktopDock({ onOpenAssistant, isOpen, shouldNudge }) {
   return (
     <nav className="dock" aria-label="Dock">
-      <span className="dock__app dock__app--finder" aria-hidden="true">
-        <span className="finder-face" aria-hidden="true"><i /></span>
-      </span>
-      <span className="dock__app dock__app--safari" aria-hidden="true">
-        <span className="safari-compass" aria-hidden="true">⌖</span>
-      </span>
-      <span className="dock__app dock__app--photos" aria-hidden="true">
-        <span aria-hidden="true">✿</span>
-      </span>
-      <span className="dock__app dock__app--notes" aria-hidden="true">
-        <span aria-hidden="true">▤</span>
-      </span>
+      <a className="dock__app dock__app--mail" href="mailto:iyushkumaryadav2027@gmail.com" aria-label="Mail">
+        <img src={gmailLogo} alt="" />
+      </a>
+      <a className="dock__app dock__app--github" href="https://github.com/piyushxx07" target="_blank" rel="noreferrer" aria-label="GitHub">
+        <img src={githubLogo} alt="" />
+      </a>
       <span className="dock__app dock__app--terminal" aria-hidden="true">
         <span aria-hidden="true">›_</span>
       </span>
+      <a className="dock__app dock__app--linkedin" href="https://www.linkedin.com/in/piyush-kumar-xx07/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+        <img src={linkedinLogo} alt="" />
+      </a>
       <span className="dock__divider" aria-hidden="true" />
       <button
         className={`dock__app dock__app--assistant${isOpen ? ' is-open' : ''}${shouldNudge ? ' is-nudging' : ''}`}
@@ -131,14 +139,16 @@ function MobileShortcut({ label, icon, className }) {
   );
 }
 
-function MobileLinkShortcut({ label, icon, className, href, external = false }) {
+function MobileLinkShortcut({ label, logo, className, href, external = false }) {
   return (
     <a
       className="mobile-shortcut mobile-shortcut--link"
       href={href}
       {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}
     >
-      <span className={`mobile-shortcut__icon ${className}`} aria-hidden="true">{icon}</span>
+      <span className={`mobile-shortcut__icon ${className}`} aria-hidden="true">
+        <img src={logo} alt="" />
+      </span>
       <span className="mobile-shortcut__label">{label}</span>
     </a>
   );
@@ -152,9 +162,7 @@ function MobileAssistantApp({ onOpenAssistant, shouldNudge }) {
       aria-label="Open Ask Me assistant"
       onClick={onOpenAssistant}
     >
-      <span className="mobile-shortcut__icon mobile-shortcut__icon--assistant" aria-hidden="true">
-        <AskMeIcon />
-      </span>
+      <AskMeIcon />
       <span className="mobile-shortcut__label">Ask Me</span>
     </button>
   );
@@ -163,10 +171,10 @@ function MobileAssistantApp({ onOpenAssistant, shouldNudge }) {
 function MobileDock({ onOpenAssistant, shouldNudge }) {
   return (
     <nav className="mobile-dock" aria-label="Mobile dock">
-      <MobileLinkShortcut label="Mail" icon="✉" className="mobile-shortcut__icon--mail" href="mailto:iyushkumaryadav2027@gmail.com" />
-      <MobileLinkShortcut label="GitHub" icon="GH" className="mobile-shortcut__icon--github" href="https://github.com/piyushxx07" external />
+      <MobileLinkShortcut label="Mail" logo={gmailLogo} className="mobile-shortcut__icon--mail" href="mailto:iyushkumaryadav2027@gmail.com" />
+      <MobileLinkShortcut label="GitHub" logo={githubLogo} className="mobile-shortcut__icon--github" href="https://github.com/piyushxx07" external />
       <MobileAssistantApp onOpenAssistant={onOpenAssistant} shouldNudge={shouldNudge} />
-      <MobileLinkShortcut label="LinkedIn" icon="in" className="mobile-shortcut__icon--linkedin" href="https://www.linkedin.com/in/piyush-kumar-xx07/" external />
+      <MobileLinkShortcut label="LinkedIn" logo={linkedinLogo} className="mobile-shortcut__icon--linkedin" href="https://www.linkedin.com/in/piyush-kumar-xx07/" external />
     </nav>
   );
 }
@@ -187,23 +195,13 @@ function MobileHome({ dateTime, time, now, onOpenAssistant, isOpen, shouldNudge 
         </div>
       </div>
 
-      <button
-        className={`dynamic-island${isOpen ? ' is-open' : ''}${shouldNudge ? ' is-nudging' : ''}`}
-        type="button"
-        aria-label={isOpen ? 'Close Ask Me assistant' : 'Open Ask Me assistant'}
-        aria-expanded={isOpen}
-        onClick={onOpenAssistant}
-      >
+      <div className={`dynamic-island${isOpen ? ' is-open' : ''}`} aria-hidden="true">
         <span className="dynamic-island__glow" aria-hidden="true" />
-        <AskMeIcon />
-        <span>Ask Me</span>
-      </button>
+      </div>
 
       <div className="mobile-widgets">
         <article className="mobile-widget mobile-widget--welcome">
-          <span className="mobile-widget__date">{dateTime}</span>
-          <p>Hey, I’m Piyush</p>
-          <strong>PORTFOLIO</strong>
+          <p>Hi, I’m Piyush.<br />Welcome to my portfolio.</p>
         </article>
         <article className="mobile-widget mobile-widget--clock" aria-label={`Current local time ${time}`}>
           <span className="mobile-widget__date">{dateTime}</span>
@@ -234,7 +232,7 @@ function MobileHome({ dateTime, time, now, onOpenAssistant, isOpen, shouldNudge 
   );
 }
 
-function AssistantWindow({ onClose }) {
+function AssistantWindow({ onClose, onAnimationEnd, isClosing }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [hasStarted, setHasStarted] = useState(false);
@@ -267,7 +265,13 @@ function AssistantWindow({ onClose }) {
   }
 
   return (
-    <section className="assistant" role="dialog" aria-modal="false" aria-labelledby="assistant-title">
+    <section
+      className={`assistant${isClosing ? ' is-closing' : ''}`}
+      role="dialog"
+      aria-modal="false"
+      aria-labelledby="assistant-title"
+      onAnimationEnd={onAnimationEnd}
+    >
       <header className="assistant__titlebar">
         <div className="window-controls" aria-label="Window controls">
           <button className="window-controls__button window-controls__button--close" type="button" aria-label="Close assistant" onClick={onClose} />
@@ -327,21 +331,44 @@ function AssistantWindow({ onClose }) {
 
 function App() {
   const [assistantOpen, setAssistantOpen] = useState(false);
+  const [assistantClosing, setAssistantClosing] = useState(false);
   const [assistantInteracted, setAssistantInteracted] = useState(false);
   const [now, setNow] = useState(() => new Date());
 
   function handleAskMeClick() {
     setAssistantInteracted(true);
-    setAssistantOpen((open) => !open);
+    if (assistantOpen) {
+      setAssistantOpen(false);
+      setAssistantClosing(true);
+      return;
+    }
+    setAssistantClosing(false);
+    setAssistantOpen(true);
+  }
+
+  function closeAssistant() {
+    if (!assistantOpen) return;
+    setAssistantOpen(false);
+    setAssistantClosing(true);
+  }
+
+  function handleAssistantAnimationEnd(event) {
+    if (
+      event.target === event.currentTarget
+      && assistantClosing
+      && ['assistant-to-island', 'assistant-close', 'assistant-to-desktop-island'].includes(event.animationName)
+    ) {
+      setAssistantClosing(false);
+    }
   }
 
   useEffect(() => {
     function handleKeyDown(event) {
-      if (event.key === 'Escape') setAssistantOpen(false);
+      if (event.key === 'Escape') closeAssistant();
     }
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [assistantOpen]);
 
   useEffect(() => {
     const clock = window.setInterval(() => setNow(new Date()), 1000);
@@ -374,15 +401,16 @@ function App() {
           <span className="status-battery" aria-label="Battery">▰</span>
           <time dateTime={now.toISOString()}>{dateTime}&nbsp; {time}</time>
         </div>
+        <DesktopIsland isOpen={assistantOpen} />
       </header>
 
       <MobileHome
         dateTime={dateTime}
         time={time}
         now={now}
+        onOpenAssistant={handleAskMeClick}
         isOpen={assistantOpen}
         shouldNudge={!assistantInteracted && !assistantOpen}
-        onOpenAssistant={handleAskMeClick}
       />
 
       <section className="welcome" aria-label="Welcome">
@@ -395,7 +423,13 @@ function App() {
         {projects.map((project) => <ProjectFolder key={project.name} project={project} />)}
       </section>
 
-      {assistantOpen && <AssistantWindow onClose={() => setAssistantOpen(false)} />}
+      {(assistantOpen || assistantClosing) && (
+        <AssistantWindow
+          isClosing={assistantClosing}
+          onAnimationEnd={handleAssistantAnimationEnd}
+          onClose={closeAssistant}
+        />
+      )}
 
       <DesktopDock
         isOpen={assistantOpen}

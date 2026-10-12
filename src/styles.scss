@@ -150,6 +150,44 @@ button {
   display: none;
 }
 
+.desktop-island {
+  position: absolute;
+  z-index: 6;
+  top: 50%;
+  left: 50%;
+  display: none;
+  width: 126px;
+  height: 30px;
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 22px;
+  background: #050609;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.26), inset 0 1px 1px rgba(255, 255, 255, 0.09);
+  transition:
+    width 360ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    height 360ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 360ms ease;
+
+  &__glow {
+    position: absolute;
+    inset: -12px;
+    background: radial-gradient(ellipse, rgba(57, 173, 255, 0.42), transparent 65%);
+    opacity: 0;
+    transition: opacity 360ms ease;
+  }
+
+  &.is-open {
+    width: 190px;
+    height: 36px;
+    box-shadow: 0 0 24px rgba(83, 190, 255, 0.42), 0 3px 12px rgba(0, 0, 0, 0.26);
+
+    .desktop-island__glow {
+      opacity: 0.8;
+    }
+  }
+}
+
 .welcome {
   position: absolute;
   z-index: 1;
@@ -286,6 +324,11 @@ button {
     box-shadow: 0 2px 5px rgba(21, 27, 62, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.75);
     transition: transform 160ms ease, filter 160ms ease;
 
+    &:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.95);
+      outline-offset: 3px;
+    }
+
     &:hover,
     &:focus-visible {
       z-index: 1;
@@ -320,6 +363,42 @@ button {
       background: linear-gradient(145deg, #647086, #292f3e);
       font-family: ui-monospace, monospace;
       font-size: 18px;
+    }
+
+    &--mail {
+      color: #2488df;
+      background: linear-gradient(145deg, #f9fdff, #b7e3ff);
+      font-size: 23px;
+    }
+
+    &--github {
+      color: #fff;
+      background: linear-gradient(145deg, #53647d, #202c40);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.06em;
+    }
+
+    &--linkedin {
+      color: #fff;
+      background: linear-gradient(145deg, #5bc5ff, #1261bd);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    &--mail,
+    &--github,
+    &--linkedin {
+      cursor: pointer;
+      text-decoration: none;
+
+      img {
+        width: calc(100% + 2px);
+        height: calc(100% + 2px);
+        margin: -1px;
+        border-radius: 10px;
+        object-fit: cover;
+      }
     }
 
     &--assistant {
@@ -433,6 +512,11 @@ button {
   -webkit-backdrop-filter: blur(34px) saturate(1.25);
   animation: assistant-appear 180ms ease-out both;
 
+  &.is-closing {
+    animation: assistant-close 180ms ease-in both;
+    pointer-events: none;
+  }
+
   &__titlebar {
     position: relative;
     display: grid;
@@ -495,7 +579,7 @@ button {
 }
 
 .dock__app--assistant.is-nudging {
-  animation: ask-me-nudge 1.2s ease-in-out 1;
+  animation: ask-me-nudge 3s ease-in-out infinite;
   will-change: transform;
 }
 
@@ -653,10 +737,59 @@ button {
   }
 }
 
+@media (min-width: 601px) {
+  .desktop-island {
+    display: block;
+  }
+
+  .assistant {
+    animation: assistant-from-desktop-island 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+    &.is-closing {
+      animation: assistant-to-desktop-island 360ms cubic-bezier(0.4, 0, 0.8, 0.2) both;
+    }
+  }
+}
+
+@keyframes assistant-from-desktop-island {
+  from {
+    opacity: 0.45;
+    border-radius: 24px;
+    transform: translate(-50%, calc(-50% + 16px - 50vh)) scale(0.08);
+  }
+
+  to {
+    opacity: 1;
+    border-radius: 14px;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes assistant-to-desktop-island {
+  from {
+    opacity: 1;
+    border-radius: 14px;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  to {
+    opacity: 0.45;
+    border-radius: 24px;
+    transform: translate(-50%, calc(-50% + 16px - 50vh)) scale(0.08);
+  }
+}
+
 @keyframes assistant-appear {
   from {
     opacity: 0;
     transform: translate(-50%, calc(-50% + 8px)) scale(0.985);
+  }
+
+  @keyframes assistant-close {
+    to {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.92);
+    }
   }
 
   to {
@@ -677,18 +810,20 @@ button {
     position: absolute;
     z-index: 3;
     inset: 0;
-    display: grid;
-    grid-template-rows: 25px 124px minmax(0, 1fr) 78px;
-    gap: 12px;
+    display: block;
     padding: max(10px, env(safe-area-inset-top)) 12px max(10px, env(safe-area-inset-bottom));
     color: #fff;
   }
 
   .mobile-status {
-    position: relative;
+    position: absolute;
+    top: max(10px, env(safe-area-inset-top));
+    right: 12px;
+    left: 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: 25px;
     padding: 0 7px;
     font-size: 14px;
     font-weight: 700;
@@ -738,63 +873,48 @@ button {
 
   .dynamic-island {
     position: absolute;
-    top: 6px;
-    left: calc(50% - 92px);
-    display: flex;
-    width: 184px;
-    height: 32px;
-    align-items: center;
-    justify-content: center;
-    justify-self: center;
-    gap: 7px;
+    top: calc(max(10px, env(safe-area-inset-top)) + 1px);
+    left: 50%;
+    display: block;
+    width: 112px;
+    height: 28px;
     overflow: hidden;
     padding: 0 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 22px;
     background: #050609;
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.26), inset 0 1px 1px rgba(255, 255, 255, 0.09);
-    color: #fff;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: width 180ms ease, box-shadow 180ms ease;
-
-    svg {
-      z-index: 1;
-      width: 18px;
-      height: 18px;
-    }
-
-    > span:last-child {
-      z-index: 1;
-    }
+    transform: translateX(-50%);
+    transition: width 360ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 360ms ease;
 
     &__glow {
       position: absolute;
       inset: -12px;
-      background: radial-gradient(ellipse, rgba(57, 173, 255, 0.32), transparent 65%);
-      opacity: 0.55;
-      transition: opacity 180ms ease;
-    }
-
-    &:hover,
-    &:focus-visible {
-      outline: 2px solid rgba(255, 255, 255, 0.75);
-      outline-offset: 2px;
+      background: radial-gradient(ellipse, rgba(57, 173, 255, 0.42), transparent 65%);
+      opacity: 0;
+      transition: opacity 360ms ease;
     }
 
     &.is-open {
-      width: 196px;
-      left: calc(50% - 98px);
-      box-shadow: 0 0 20px rgba(83, 190, 255, 0.36), 0 3px 12px rgba(0, 0, 0, 0.26);
+      width: min(184px, calc(100vw - 56px));
+      height: 34px;
+      box-shadow: 0 0 24px rgba(83, 190, 255, 0.42), 0 3px 12px rgba(0, 0, 0, 0.26);
+
+      .dynamic-island__glow {
+        opacity: 0.8;
+      }
     }
   }
 
   .mobile-widgets {
+    position: absolute;
+    top: calc(max(50px, env(safe-area-inset-top)) + 28px + 21px);
+    right: 12px;
+    left: 12px;
     display: grid;
+    height: 146px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 9px;
-    margin-top: 8px;
   }
 
   .mobile-widget {
@@ -841,19 +961,33 @@ button {
   }
 
   .mobile-widget--welcome {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 4px;
+    text-align: center;
+
     p {
-      font-size: clamp(24px, 7vw, 31px);
+      width: 100%;
+      min-height: 0;
+      align-self: center;
+      text-align: center;
+      font-size: clamp(17px, 5.2vw, 21px);
+      line-height: 1.2;
     }
 
     strong {
-      font-size: 13px;
+      justify-self: center;
+      font-family: "Avenir Next", "Trebuchet MS", sans-serif;
+      font-size: 12px;
       font-weight: 700;
-      letter-spacing: 0.09em;
+      letter-spacing: 0.12em;
+      line-height: 1.25;
     }
   }
 
   .mobile-widget--clock {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto 1fr auto;
     justify-items: center;
     padding: 10px;
@@ -875,9 +1009,10 @@ button {
 
   .clock-face {
     position: relative;
-    width: 58px;
-    height: 58px;
+    width: 80px;
+    height: 80px;
     align-self: center;
+    justify-self: center;
     border: 1px solid rgba(255, 255, 255, 0.7);
     border-radius: 50%;
     background:
@@ -892,10 +1027,10 @@ button {
       border-radius: 2px;
       background: rgba(255, 255, 255, 0.88);
 
-      &--top { top: 4px; left: calc(50% - 1px); }
-      &--right { top: calc(50% - 1px); right: 4px; transform: rotate(90deg); }
-      &--bottom { bottom: 4px; left: calc(50% - 1px); }
-      &--left { top: calc(50% - 1px); left: 4px; transform: rotate(90deg); }
+      &--top { top: 6px; left: calc(50% - 1px); }
+      &--right { top: calc(50% - 1px); right: 6px; transform: rotate(90deg); }
+      &--bottom { bottom: 6px; left: calc(50% - 1px); }
+      &--left { top: calc(50% - 1px); left: 6px; transform: rotate(90deg); }
     }
 
     &__hand {
@@ -908,18 +1043,18 @@ button {
       transform-origin: center bottom;
 
       &--hour {
-        height: 12px;
+        height: 17px;
         background: rgba(255, 255, 255, 0.94);
       }
 
       &--minute {
-        height: 17px;
+        height: 24px;
         width: 1.5px;
         background: rgba(255, 255, 255, 0.92);
       }
 
       &--second {
-        height: 19px;
+        height: 29px;
         width: 1px;
         background: #ff8c9d;
       }
@@ -938,9 +1073,13 @@ button {
   }
 
   .mobile-apps {
+    position: absolute;
+    top: calc(max(100px, env(safe-area-inset-top)) + 32px + 20px + 146px + 20px);
+    right: 12px;
+    left: 12px;
     display: block;
     min-height: 0;
-    padding-top: 36px;
+    padding-top: 0;
 
     &__projects {
       display: grid;
@@ -957,14 +1096,14 @@ button {
     padding: 0;
 
     &__icon {
-      width: 55px;
-      height: 46px;
+      width: 61px;
+      height: 51px;
       filter: drop-shadow(0 4px 5px rgba(0, 31, 75, 0.28));
     }
 
     &__folder-svg {
-      width: 55px;
-      height: 46px;
+      width: 61px;
+      height: 51px;
     }
 
     &__name {
@@ -1017,6 +1156,13 @@ button {
           height: 31px;
         }
       }
+
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        object-fit: contain;
+      }
     }
 
     &__label {
@@ -1033,12 +1179,30 @@ button {
   }
 
   .mobile-shortcut--assistant-app {
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: inherit;
-    font: inherit;
+    display: grid;
+    width: auto;
+    min-width: 84px;
+    height: 43px;
+    grid-auto-flow: column;
+    grid-template-columns: 23px auto;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 0 9px;
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    border-radius: 10px;
+    background: linear-gradient(180deg, #fff, #e9f3ff);
+    box-shadow: 0 2px 5px rgba(21, 27, 62, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.75);
+    color: #4f5a71;
+    font-size: 11px;
+    font-weight: 600;
     cursor: pointer;
+    transition: transform 160ms ease, filter 160ms ease;
+
+    svg {
+      width: 22px;
+      height: 22px;
+    }
 
     &:focus-visible {
       outline: 2px solid rgba(255, 255, 255, 0.9);
@@ -1060,6 +1224,10 @@ button {
   }
 
   .mobile-dock {
+    position: absolute;
+    right: 12px;
+    bottom: max(20px, env(safe-area-inset-bottom));
+    left: 12px;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     align-items: center;
@@ -1079,16 +1247,33 @@ button {
       &__icon {
         width: clamp(48px, 14vw, 57px);
         border-radius: 17px;
+
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: inherit;
+          object-fit: contain;
+        }
       }
 
       &__label {
         display: none;
       }
     }
+
+    .mobile-shortcut--assistant-app .mobile-shortcut__label {
+      display: block;
+      max-width: none;
+      margin-top: 0;
+      color: #4f5a71;
+      font-size: 11px;
+      text-shadow: none;
+      white-space: nowrap;
+    }
   }
 
   .is-nudging {
-    animation: ask-me-nudge 1.2s ease-in-out 1;
+    animation: ask-me-nudge 3s ease-in-out infinite;
     will-change: transform;
   }
 
@@ -1100,9 +1285,48 @@ button {
     min-height: 0;
     border-radius: 21px;
     box-shadow: 0 24px 90px rgba(0, 8, 30, 0.66), 0 0 0 100vmax rgba(2, 14, 34, 0.2);
+    animation: assistant-from-island 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+    &.is-closing {
+      animation: assistant-to-island 320ms cubic-bezier(0.4, 0, 0.8, 0.2) both;
+    }
 
     &__titlebar {
       min-height: 44px;
+    }
+
+    @keyframes assistant-from-island {
+      from {
+        opacity: 0.45;
+        border-radius: 24px;
+        transform: translate(
+          -50%,
+          calc(-50% + max(10px, env(safe-area-inset-top)) - 3px - 50vh)
+        ) scale(0.08);
+      }
+
+      to {
+        opacity: 1;
+        border-radius: 21px;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    @keyframes assistant-to-island {
+      from {
+        opacity: 1;
+        border-radius: 21px;
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      to {
+        opacity: 0.45;
+        border-radius: 24px;
+        transform: translate(
+          -50%,
+          calc(-50% + max(10px, env(safe-area-inset-top)) - 3px - 50vh)
+        ) scale(0.08);
+      }
     }
 
     &__conversation {
@@ -1130,10 +1354,19 @@ button {
 
 @media (max-width: 360px) {
   .mobile-home {
-    grid-template-rows: 23px 112px minmax(0, 1fr) 72px;
-    gap: 10px;
     padding-right: 10px;
     padding-left: 10px;
+  }
+
+  .mobile-widgets,
+  .mobile-apps {
+    right: 10px;
+    left: 10px;
+  }
+
+  .mobile-dock {
+    right: 10px;
+    left: 10px;
   }
 
   .mobile-widget {
@@ -1147,8 +1380,8 @@ button {
 
   .project__icon,
   .project__folder-svg {
-    width: 49px;
-    height: 42px;
+    width: 54px;
+    height: 46px;
   }
 
   .mobile-shortcut__icon {
@@ -1166,11 +1399,10 @@ button {
 }
 
 @keyframes ask-me-nudge {
-  0%, 5%, 26%, 100% { transform: translateX(0) rotate(0); }
-  9% { transform: translateX(-2px) rotate(-1.5deg); }
-  13% { transform: translateX(2px) rotate(1.5deg); }
-  18% { transform: translateX(-1px) rotate(-0.8deg); }
-  22% { transform: translateX(0) rotate(0); }
+  0%, 8%, 16%, 24%, 100% { transform: translateX(0) rotate(0); }
+  2%, 18% { transform: translateX(-6px) rotate(-4deg) scale(1.08); }
+  4%, 20% { transform: translateX(6px) rotate(4deg) scale(1.08); }
+  6%, 22% { transform: translateX(-4px) rotate(-2.5deg) scale(1.04); }
 }
 
 @media (max-height: 460px) and (min-width: 601px) {

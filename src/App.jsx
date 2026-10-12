@@ -131,6 +131,19 @@ function MobileShortcut({ label, icon, className }) {
   );
 }
 
+function MobileLinkShortcut({ label, icon, className, href, external = false }) {
+  return (
+    <a
+      className="mobile-shortcut mobile-shortcut--link"
+      href={href}
+      {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}
+    >
+      <span className={`mobile-shortcut__icon ${className}`} aria-hidden="true">{icon}</span>
+      <span className="mobile-shortcut__label">{label}</span>
+    </a>
+  );
+}
+
 function MobileAssistantApp({ onOpenAssistant, shouldNudge }) {
   return (
     <button
@@ -150,19 +163,10 @@ function MobileAssistantApp({ onOpenAssistant, shouldNudge }) {
 function MobileDock({ onOpenAssistant, shouldNudge }) {
   return (
     <nav className="mobile-dock" aria-label="Mobile dock">
-      <MobileShortcut label="Phone" icon="⌕" className="mobile-shortcut__icon--phone" />
-      <MobileShortcut label="Mail" icon="✉" className="mobile-shortcut__icon--mail" />
+      <MobileLinkShortcut label="Mail" icon="✉" className="mobile-shortcut__icon--mail" href="mailto:iyushkumaryadav2027@gmail.com" />
+      <MobileLinkShortcut label="GitHub" icon="GH" className="mobile-shortcut__icon--github" href="https://github.com/piyushxx07" external />
       <MobileAssistantApp onOpenAssistant={onOpenAssistant} shouldNudge={shouldNudge} />
-      <MobileShortcut label="Music" icon="♫" className="mobile-shortcut__icon--music" />
-      <button
-        className={`mobile-ask-button${shouldNudge ? ' is-nudging' : ''}`}
-        type="button"
-        aria-label="Open Ask Me assistant"
-        onClick={onOpenAssistant}
-      >
-        <AskMeIcon />
-        <span>Ask Me</span>
-      </button>
+      <MobileLinkShortcut label="LinkedIn" icon="in" className="mobile-shortcut__icon--linkedin" href="https://www.linkedin.com/in/piyush-kumar-xx07/" external />
     </nav>
   );
 }

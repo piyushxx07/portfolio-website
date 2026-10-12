@@ -678,18 +678,19 @@ button {
     z-index: 3;
     inset: 0;
     display: grid;
-    grid-template-rows: 20px 25px 102px minmax(0, 1fr) 75px;
-    gap: 4px;
-    padding: max(8px, env(safe-area-inset-top)) 16px max(9px, env(safe-area-inset-bottom));
+    grid-template-rows: 25px 124px minmax(0, 1fr) 78px;
+    gap: 12px;
+    padding: max(10px, env(safe-area-inset-top)) 12px max(10px, env(safe-area-inset-bottom));
     color: #fff;
   }
 
   .mobile-status {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 7px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
     text-shadow: 0 1px 4px rgba(0, 32, 72, 0.3);
 
@@ -697,19 +698,19 @@ button {
       display: flex;
       align-items: center;
       gap: 5px;
-      font-size: 8px;
+      font-size: 10px;
     }
 
     &__wifi {
-      font-size: 16px;
+      font-size: 18px;
       line-height: 0.7;
       transform: rotate(90deg);
     }
 
     &__battery {
       position: relative;
-      width: 19px;
-      height: 9px;
+      width: 22px;
+      height: 11px;
       padding: 1px;
       border: 1px solid rgba(255, 255, 255, 0.9);
       border-radius: 3px;
@@ -736,10 +737,12 @@ button {
   }
 
   .dynamic-island {
-    position: relative;
+    position: absolute;
+    top: 6px;
+    left: calc(50% - 92px);
     display: flex;
-    width: 126px;
-    height: 25px;
+    width: 184px;
+    height: 32px;
     align-items: center;
     justify-content: center;
     justify-self: center;
@@ -751,15 +754,15 @@ button {
     background: #050609;
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.26), inset 0 1px 1px rgba(255, 255, 255, 0.09);
     color: #fff;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     transition: width 180ms ease, box-shadow 180ms ease;
 
     svg {
       z-index: 1;
-      width: 15px;
-      height: 15px;
+      width: 18px;
+      height: 18px;
     }
 
     > span:last-child {
@@ -781,15 +784,17 @@ button {
     }
 
     &.is-open {
-      width: 154px;
+      width: 196px;
+      left: calc(50% - 98px);
       box-shadow: 0 0 20px rgba(83, 190, 255, 0.36), 0 3px 12px rgba(0, 0, 0, 0.26);
     }
   }
 
   .mobile-widgets {
     display: grid;
-    grid-template-columns: 1.08fr 0.92fr;
-    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    margin-top: 8px;
   }
 
   .mobile-widget {
@@ -799,7 +804,7 @@ button {
     flex-direction: column;
     justify-content: space-between;
     overflow: hidden;
-    padding: 12px;
+    padding: 14px;
     border: 1px solid rgba(255, 255, 255, 0.24);
     border-radius: 20px;
     background: linear-gradient(145deg, rgba(235, 249, 255, 0.4), rgba(30, 111, 185, 0.36));
@@ -837,11 +842,11 @@ button {
 
   .mobile-widget--welcome {
     p {
-      font-size: clamp(21px, 6.5vw, 28px);
+      font-size: clamp(24px, 7vw, 31px);
     }
 
     strong {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.09em;
     }
@@ -851,17 +856,17 @@ button {
     display: grid;
     grid-template-rows: auto 1fr auto;
     justify-items: center;
-    padding: 8px;
+    padding: 10px;
 
     .mobile-widget__date {
       justify-self: stretch;
       text-align: center;
-      font-size: 9px;
+      font-size: 10px;
     }
 
     strong {
       align-self: end;
-      font-size: 12px;
+      font-size: 13px;
       font-variant-numeric: tabular-nums;
       font-weight: 700;
       letter-spacing: 0.04em;
@@ -870,8 +875,8 @@ button {
 
   .clock-face {
     position: relative;
-    width: 48px;
-    height: 48px;
+    width: 58px;
+    height: 58px;
     align-self: center;
     border: 1px solid rgba(255, 255, 255, 0.7);
     border-radius: 50%;
@@ -935,7 +940,7 @@ button {
   .mobile-apps {
     display: block;
     min-height: 0;
-    padding-top: 23px;
+    padding-top: 36px;
 
     &__projects {
       display: grid;
@@ -994,9 +999,16 @@ button {
       font-weight: 600;
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
 
-      &--phone { background: linear-gradient(145deg, #6deb85, #1ab74d); }
       &--mail { background: linear-gradient(145deg, #f9fdff, #b7e3ff); color: #2488df; }
-      &--music { background: linear-gradient(145deg, #ff8baf, #ed285c); }
+      &--github {
+        background: linear-gradient(145deg, #53647d, #202c40);
+        font-size: 17px;
+        letter-spacing: -0.06em;
+      }
+      &--linkedin {
+        background: linear-gradient(145deg, #5bc5ff, #1261bd);
+        font-size: 20px;
+      }
       &--assistant {
         background: linear-gradient(145deg, #2e436a, #101c36);
 
@@ -1035,13 +1047,25 @@ button {
     }
   }
 
+  .mobile-shortcut--link {
+    color: inherit;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+
+    &:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.9);
+      outline-offset: 2px;
+      border-radius: 14px;
+    }
+  }
+
   .mobile-dock {
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     align-items: center;
     justify-items: center;
-    gap: 4px;
-    padding: 6px;
+    gap: 6px;
+    padding: 8px 10px;
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 23px;
     background: rgba(229, 245, 255, 0.24);
@@ -1053,42 +1077,13 @@ button {
       gap: 0;
 
       &__icon {
-        width: clamp(41px, 12vw, 49px);
-        border-radius: 15px;
+        width: clamp(48px, 14vw, 57px);
+        border-radius: 17px;
       }
 
       &__label {
         display: none;
       }
-    }
-  }
-
-  .mobile-ask-button {
-    display: flex;
-    width: 100%;
-    height: 46px;
-    grid-column: span 2;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 0 8px;
-    border: 1px solid rgba(255, 255, 255, 0.76);
-    border-radius: 15px;
-    background: linear-gradient(180deg, #fff, #e5f1ff);
-    box-shadow: 0 4px 10px rgba(0, 27, 69, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.75);
-    color: #4f5a71;
-    font-size: 11px;
-    font-weight: 700;
-    cursor: pointer;
-
-    svg {
-      width: 23px;
-      height: 23px;
-    }
-
-    &:focus-visible {
-      outline: 2px solid rgba(255, 255, 255, 0.95);
-      outline-offset: 2px;
     }
   }
 
@@ -1135,10 +1130,10 @@ button {
 
 @media (max-width: 360px) {
   .mobile-home {
-    grid-template-rows: 20px 25px 96px minmax(0, 1fr) 69px;
-    gap: 4px;
-    padding-right: 11px;
-    padding-left: 11px;
+    grid-template-rows: 23px 112px minmax(0, 1fr) 72px;
+    gap: 10px;
+    padding-right: 10px;
+    padding-left: 10px;
   }
 
   .mobile-widget {
@@ -1160,10 +1155,13 @@ button {
     width: 43px;
   }
 
-  .mobile-ask-button {
-    height: 42px;
-    gap: 4px;
-    font-size: 10px;
+  .mobile-dock {
+    gap: 3px;
+    padding: 6px;
+  }
+
+  .mobile-dock .mobile-shortcut__icon {
+    width: 44px;
   }
 }
 
